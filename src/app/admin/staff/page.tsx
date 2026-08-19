@@ -16,8 +16,10 @@ export default async function StaffAdminPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-navy-950">Staff Members</h1>
-      <p className="mt-1 text-sm text-slate-500">The staff leaderboard shown on the homepage.</p>
+      <h1 className="text-2xl font-bold text-navy-950">Teacher Leaderboard</h1>
+      <p className="mt-1 text-sm text-slate-500">
+        Faculty shown on the homepage Teacher Leaderboard. Lower sort order ranks higher.
+      </p>
       <div className="mt-8">
         <ResourceManager
           table="staff_members"

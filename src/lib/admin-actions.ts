@@ -11,6 +11,7 @@ const ALLOWED_TABLES = [
   "notifications",
   "stat_counters",
   "staff_members",
+  "students",
   "achievements",
   "gallery_images",
   "results",

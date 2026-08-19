@@ -35,6 +35,8 @@ In the Supabase SQL editor, run, in order:
 2. `supabase/migrations/0002_seed.sql` — seeds starter content (site
    settings, stat counters, hero slides, notifications) inferred from the
    original site so the clone isn't empty on first load.
+3. `supabase/migrations/0003_students.sql` — creates the Student Leaderboard
+   table and seeds a few sample top achievers.
 
 ### 3. Create an admin user
 
@@ -69,9 +71,10 @@ built-in defaults, and `/admin` shows setup instructions instead of erroring.
 
 - **Site Settings** — school name, logo, contact info, social links, hero
   copy, chairman's message, About page copy, Admissions copy.
-- **Hero Slides**, **Notifications**, **Stat Counters**, **Staff**,
-  **Achievements**, **Gallery**, **Results**, **Disclosures**, **Alumni** —
-  full CRUD with image upload (stored in Supabase Storage) or a pasted URL.
+- **Hero Slides**, **Notifications**, **Stat Counters**, **Teacher
+  Leaderboard**, **Student Leaderboard**, **Achievements**, **Gallery**,
+  **Results**, **Disclosures**, **Alumni** — full CRUD with image upload
+  (stored in Supabase Storage) or a pasted URL.
 - **Messages** — contact form and admission enquiry submissions from the
   public site.
 

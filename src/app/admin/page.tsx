@@ -4,6 +4,7 @@ import {
   Bell,
   BarChart3,
   Users,
+  Medal,
   Trophy,
   Image as ImageIcon,
   Mail,
@@ -13,7 +14,8 @@ import {
 const TABLES = [
   { table: "notifications", label: "Notifications", href: "/admin/notifications", icon: Bell },
   { table: "stat_counters", label: "Stat Counters", href: "/admin/stats", icon: BarChart3 },
-  { table: "staff_members", label: "Staff Members", href: "/admin/staff", icon: Users },
+  { table: "staff_members", label: "Teacher Leaderboard", href: "/admin/staff", icon: Users },
+  { table: "students", label: "Student Leaderboard", href: "/admin/students", icon: Medal },
   { table: "achievements", label: "Achievements", href: "/admin/achievements", icon: Trophy },
   { table: "gallery_images", label: "Gallery Images", href: "/admin/gallery", icon: ImageIcon },
   { table: "contact_messages", label: "Contact Messages", href: "/admin/messages", icon: Mail },

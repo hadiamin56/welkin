@@ -71,6 +71,17 @@ export interface Disclosure {
   is_published: boolean;
 }
 
+export interface StudentTopper {
+  id: string;
+  name: string;
+  class_name: string;
+  photo_url: string;
+  achievement: string;
+  score: number;
+  sort_order: number;
+  is_published: boolean;
+}
+
 export interface AlumniEntry {
   id: string;
   name: string;

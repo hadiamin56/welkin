@@ -10,6 +10,7 @@ import type {
   SiteSettings,
   StaffMember,
   StatCounter,
+  StudentTopper,
 } from "@/types/content";
 
 export const DEFAULT_SETTINGS: SiteSettings = {
@@ -95,11 +96,36 @@ export async function getStatCounters(): Promise<StatCounter[]> {
   return data ?? [];
 }
 
+export const DEFAULT_STAFF: StaffMember[] = [
+  { id: "default-t1", name: "Dr. Mehraj Ud Din", designation: "Principal", photo_url: "", bio: "25+ years in academic leadership and CBSE curriculum design.", sort_order: 1, is_published: true },
+  { id: "default-t2", name: "Farah Bashir", designation: "Vice Principal", photo_url: "", bio: "Oversees academic quality across all senior secondary streams.", sort_order: 2, is_published: true },
+  { id: "default-t3", name: "Aabid Hussain", designation: "Academic Head — Sciences", photo_url: "", bio: "Leads the Physics, Chemistry and Biology departments.", sort_order: 3, is_published: true },
+  { id: "default-t4", name: "Sana Parveen", designation: "Head — Kindergarten Wing", photo_url: "", bio: "Specialist in early-years and foundational learning.", sort_order: 4, is_published: true },
+];
+
 export async function getStaffMembers(): Promise<StaffMember[]> {
-  if (!SUPABASE_CONFIGURED) return [];
+  if (!SUPABASE_CONFIGURED) return DEFAULT_STAFF;
   const supabase = await createClient();
   const { data } = await supabase
     .from("staff_members")
+    .select("*")
+    .eq("is_published", true)
+    .order("sort_order", { ascending: true });
+  return data ?? [];
+}
+
+export const DEFAULT_STUDENT_TOPPERS: StudentTopper[] = [
+  { id: "default-s1", name: "Aarohi Sharma", class_name: "Class XII", photo_url: "", achievement: "School Topper — Science Stream", score: 98.6, sort_order: 1, is_published: true },
+  { id: "default-s2", name: "Zain Malik", class_name: "Class XII", photo_url: "", achievement: "School Topper — Commerce Stream", score: 97.2, sort_order: 2, is_published: true },
+  { id: "default-s3", name: "Iqra Nazir", class_name: "Class X", photo_url: "", achievement: "Board Topper", score: 98.0, sort_order: 3, is_published: true },
+  { id: "default-s4", name: "Danish Rather", class_name: "Class XI", photo_url: "", achievement: "District Rank 1 — Mathematics Olympiad", score: 96.4, sort_order: 4, is_published: true },
+];
+
+export async function getStudentToppers(): Promise<StudentTopper[]> {
+  if (!SUPABASE_CONFIGURED) return DEFAULT_STUDENT_TOPPERS;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("students")
     .select("*")
     .eq("is_published", true)
     .order("sort_order", { ascending: true });
