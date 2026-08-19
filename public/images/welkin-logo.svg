@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="48" fill="#0a1631" stroke="#f2c14e" stroke-width="3"/>
+  <path d="M25 62 L38 34 L50 58 L62 34 L75 62" fill="none" stroke="#f2c14e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="50" y="80" text-anchor="middle" fill="#ffffff" font-family="Georgia, serif" font-size="12" font-weight="bold">WELKIN</text>
+</svg>
