@@ -19,6 +19,9 @@ import {
   Mail,
   LogOut,
   ExternalLink,
+  CalendarDays,
+  Quote,
+  Milestone as MilestoneIcon,
 } from "lucide-react";
 
 const LINKS = [
@@ -26,11 +29,14 @@ const LINKS = [
   { href: "/admin/settings", label: "Site Settings", icon: Settings },
   { href: "/admin/hero-slides", label: "Hero Slides", icon: GalleryHorizontal },
   { href: "/admin/notifications", label: "Notifications", icon: Bell },
+  { href: "/admin/events", label: "Events Calendar", icon: CalendarDays },
   { href: "/admin/stats", label: "Stat Counters", icon: BarChart3 },
   { href: "/admin/staff", label: "Teacher Leaderboard", icon: Users },
   { href: "/admin/students", label: "Student Leaderboard", icon: Medal },
   { href: "/admin/achievements", label: "Achievements", icon: Trophy },
   { href: "/admin/gallery", label: "Gallery", icon: ImageIcon },
+  { href: "/admin/testimonials", label: "Testimonials", icon: Quote },
+  { href: "/admin/milestones", label: "Our Journey", icon: MilestoneIcon },
   { href: "/admin/results", label: "Results", icon: ClipboardList },
   { href: "/admin/disclosures", label: "Disclosures", icon: FileText },
   { href: "/admin/alumni", label: "Alumni", icon: GraduationCap },

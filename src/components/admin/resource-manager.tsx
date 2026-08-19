@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import Image from "next/image";
 import { Plus, Pencil, Trash2, X, GripVertical } from "lucide-react";
-import { createRow, deleteRow, updateRow, type FieldValue } from "@/lib/admin-actions";
+import { createRow, deleteRow, reorderRows, updateRow, type FieldValue } from "@/lib/admin-actions";
 import { ImageUploadField } from "@/components/admin/image-upload-field";
 
 export type FieldConfig = {
@@ -33,6 +33,31 @@ export function ResourceManager({
 }) {
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [orderedRows, setOrderedRows] = useState(rows);
+  const [dragId, setDragId] = useState<string | null>(null);
+  const [, startReorder] = useTransition();
+
+  const rowsKey = rows.map((r) => r.id).join(",");
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- resync local order when the server list changes
+    setOrderedRows(rows);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowsKey]);
+
+  const canReorder = orderedRows.length > 1 && "sort_order" in (orderedRows[0] ?? {});
+
+  function handleDrop(targetId: string) {
+    if (!dragId || dragId === targetId) return;
+    const next = [...orderedRows];
+    const fromIndex = next.findIndex((r) => r.id === dragId);
+    const toIndex = next.findIndex((r) => r.id === targetId);
+    if (fromIndex === -1 || toIndex === -1) return;
+    const [moved] = next.splice(fromIndex, 1);
+    next.splice(toIndex, 0, moved);
+    setOrderedRows(next);
+    setDragId(null);
+    startReorder(() => reorderRows(table, next.map((r) => String(r.id)), path));
+  }
 
   return (
     <div>
@@ -57,15 +82,30 @@ export function ResourceManager({
         </div>
       )}
 
-      <div className="mt-6 space-y-3">
-        {rows.length === 0 && (
+      {canReorder && (
+        <p className="mt-4 text-xs text-slate-400">
+          Drag the handle to reorder — the new order saves automatically.
+        </p>
+      )}
+
+      <div className="mt-2 space-y-3">
+        {orderedRows.length === 0 && (
           <p className="rounded-2xl border border-dashed border-slate-300 py-12 text-center text-sm text-slate-400">
             Nothing here yet — click &ldquo;Add New&rdquo; to create the first entry.
           </p>
         )}
 
-        {rows.map((row) => (
-          <div key={String(row.id)} className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+        {orderedRows.map((row) => (
+          <div
+            key={String(row.id)}
+            draggable={canReorder && editingId !== row.id}
+            onDragStart={() => setDragId(String(row.id))}
+            onDragOver={(e) => canReorder && e.preventDefault()}
+            onDrop={() => handleDrop(String(row.id))}
+            className={`rounded-2xl border border-slate-200 bg-white shadow-sm transition-opacity ${
+              dragId === row.id ? "opacity-50" : ""
+            }`}
+          >
             {editingId === row.id ? (
               <div className="p-6">
                 <RecordForm
@@ -78,7 +118,11 @@ export function ResourceManager({
               </div>
             ) : (
               <div className="flex items-center gap-4 p-4">
-                <GripVertical className="h-4 w-4 shrink-0 text-slate-300" />
+                <GripVertical
+                  className={`h-4 w-4 shrink-0 ${
+                    canReorder ? "cursor-grab text-slate-400 active:cursor-grabbing" : "text-slate-200"
+                  }`}
+                />
                 {imageField && row[imageField] ? (
                   <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-slate-100">
                     <Image src={String(row[imageField])} alt="" fill className="object-cover" />

@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Phone, Mail } from "lucide-react";
+import { useLanguage } from "@/components/site/language-provider";
 
 function FacebookIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -53,6 +56,8 @@ export function SiteFooter({
   linkedinUrl: string;
   twitterUrl: string;
 }) {
+  const { t } = useLanguage();
+
   return (
     <footer className="bg-navy-950 text-slate-300">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-16 sm:grid-cols-2 lg:grid-cols-4">
@@ -86,7 +91,7 @@ export function SiteFooter({
 
         <div>
           <h3 className="text-sm font-semibold uppercase tracking-wider text-gold-400">
-            Quick Links
+            {t("quick_links")}
           </h3>
           <ul className="mt-4 space-y-2.5 text-sm">
             {QUICK_LINKS.map((link) => (
@@ -101,11 +106,12 @@ export function SiteFooter({
 
         <div>
           <h3 className="text-sm font-semibold uppercase tracking-wider text-gold-400">
-            Explore
+            {t("explore")}
           </h3>
           <ul className="mt-4 space-y-2.5 text-sm">
             <li><Link href="/academics" className="text-slate-400 hover:text-white">Academics</Link></li>
             <li><Link href="/gallery" className="text-slate-400 hover:text-white">Gallery</Link></li>
+            <li><Link href="/events" className="text-slate-400 hover:text-white">Events</Link></li>
             <li><Link href="/notifications" className="text-slate-400 hover:text-white">Notifications</Link></li>
             <li><Link href="/results" className="text-slate-400 hover:text-white">Results</Link></li>
             <li><Link href="/contact" className="text-slate-400 hover:text-white">Contact</Link></li>
@@ -114,7 +120,7 @@ export function SiteFooter({
 
         <div>
           <h3 className="text-sm font-semibold uppercase tracking-wider text-gold-400">
-            Our Contacts
+            {t("our_contacts")}
           </h3>
           <ul className="mt-4 space-y-3 text-sm text-slate-400">
             <li className="flex gap-2.5"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" /> {address}</li>
@@ -125,7 +131,7 @@ export function SiteFooter({
       </div>
 
       <div className="border-t border-white/10 py-5 text-center text-xs text-slate-500">
-        Copyright © {new Date().getFullYear()} {schoolName}. All rights reserved.
+        Copyright © {new Date().getFullYear()} {schoolName}. {t("all_rights_reserved")}
       </div>
     </footer>
   );

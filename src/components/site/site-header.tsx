@@ -5,17 +5,23 @@ import Image from "next/image";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X, Phone, Mail } from "lucide-react";
+import { NotificationBell } from "@/components/site/notification-bell";
+import { CommandPalette } from "@/components/site/command-palette";
+import { LanguageToggle } from "@/components/site/language-toggle";
+import { useLanguage } from "@/components/site/language-provider";
+import type { DictKey } from "@/lib/i18n";
 
-const NAV_LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/academics", label: "Academics" },
-  { href: "/admissions", label: "Admissions" },
-  { href: "/achievements", label: "Achievements" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/notifications", label: "Notifications" },
-  { href: "/alumni", label: "Alumni" },
-  { href: "/contact", label: "Contact" },
+const NAV_LINKS: { href: string; key: DictKey }[] = [
+  { href: "/", key: "nav_home" },
+  { href: "/about", key: "nav_about" },
+  { href: "/academics", key: "nav_academics" },
+  { href: "/admissions", key: "nav_admissions" },
+  { href: "/achievements", key: "nav_achievements" },
+  { href: "/gallery", key: "nav_gallery" },
+  { href: "/events", key: "nav_events" },
+  { href: "/notifications", key: "nav_notifications" },
+  { href: "/alumni", key: "nav_alumni" },
+  { href: "/contact", key: "nav_contact" },
 ];
 
 export function SiteHeader({
@@ -31,17 +37,21 @@ export function SiteHeader({
 }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   return (
     <header className="sticky top-0 z-50">
       <div className="hidden bg-navy-950 text-navy-100 md:block">
-        <div className="mx-auto flex max-w-7xl items-center justify-end gap-6 px-6 py-2 text-xs text-slate-300">
-          <a href={`tel:${phone}`} className="flex items-center gap-1.5 hover:text-gold-400">
-            <Phone className="h-3.5 w-3.5" /> {phone}
-          </a>
-          <a href={`mailto:${email}`} className="flex items-center gap-1.5 hover:text-gold-400">
-            <Mail className="h-3.5 w-3.5" /> {email}
-          </a>
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-2 text-xs text-slate-300">
+          <div className="flex items-center gap-6">
+            <a href={`tel:${phone}`} className="flex items-center gap-1.5 hover:text-gold-400">
+              <Phone className="h-3.5 w-3.5" /> {phone}
+            </a>
+            <a href={`mailto:${email}`} className="flex items-center gap-1.5 hover:text-gold-400">
+              <Mail className="h-3.5 w-3.5" /> {email}
+            </a>
+          </div>
+          <LanguageToggle />
         </div>
       </div>
 
@@ -54,7 +64,7 @@ export function SiteHeader({
             <span className="flex flex-col leading-tight">
               <span className="text-lg font-bold text-white">{schoolName}</span>
               <span className="text-[11px] uppercase tracking-wider text-gold-400">
-                Higher Secondary School
+                {t("higher_secondary_school")}
               </span>
             </span>
           </Link>
@@ -72,18 +82,20 @@ export function SiteHeader({
                       : "text-slate-200 hover:bg-white/5 hover:text-gold-400"
                   }`}
                 >
-                  {link.label}
+                  {t(link.key)}
                 </Link>
               );
             })}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <CommandPalette />
+            <NotificationBell />
             <Link
               href="/admissions"
               className="hidden rounded-full bg-gradient-to-r from-gold-500 to-gold-400 px-5 py-2.5 text-sm font-semibold text-navy-950 shadow-lg shadow-gold-500/20 transition-transform hover:scale-105 md:inline-block"
             >
-              Apply Now
+              {t("apply_now")}
             </Link>
             <button
               aria-label="Toggle menu"
@@ -104,15 +116,18 @@ export function SiteHeader({
                 onClick={() => setOpen(false)}
                 className="rounded-lg px-3 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/5 hover:text-gold-400"
               >
-                {link.label}
+                {t(link.key)}
               </Link>
             ))}
+            <div className="mt-2 flex items-center justify-between">
+              <LanguageToggle />
+            </div>
             <Link
               href="/admissions"
               onClick={() => setOpen(false)}
               className="mt-2 rounded-full bg-gradient-to-r from-gold-500 to-gold-400 px-5 py-2.5 text-center text-sm font-semibold text-navy-950"
             >
-              Apply Now
+              {t("apply_now")}
             </Link>
           </nav>
         )}

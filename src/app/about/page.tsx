@@ -1,12 +1,17 @@
 import { BookOpen, Users, ShieldCheck } from "lucide-react";
 import { PageHero } from "@/components/site/page-hero";
 import { StatCounters } from "@/components/site/stat-counters";
-import { getSiteSettings, getStatCounters } from "@/lib/queries";
+import { JourneyTimeline } from "@/components/site/journey-timeline";
+import { getMilestones, getSiteSettings, getStatCounters } from "@/lib/queries";
 
 export const metadata = { title: "About Us — SRM Welkin" };
 
 export default async function AboutPage() {
-  const [settings, counters] = await Promise.all([getSiteSettings(), getStatCounters()]);
+  const [settings, counters, milestones] = await Promise.all([
+    getSiteSettings(),
+    getStatCounters(),
+    getMilestones(),
+  ]);
 
   const cards = [
     { icon: BookOpen, title: "Why SRM Welkin?", body: settings.about_why_welkin },
@@ -44,6 +49,8 @@ export default async function AboutPage() {
           )}
         </div>
       </section>
+
+      <JourneyTimeline milestones={milestones} />
 
       <StatCounters counters={counters} />
     </>

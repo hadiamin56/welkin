@@ -22,15 +22,50 @@ const TABLES = [
   { table: "admission_enquiries", label: "Admission Enquiries", href: "/admin/messages", icon: Inbox },
 ];
 
+function timeAgo(iso: string) {
+  const diffMs = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  return `${Math.floor(hours / 24)}d ago`;
+}
+
 export default async function AdminDashboardPage() {
   const supabase = await createClient();
 
-  const counts = await Promise.all(
-    TABLES.map(async (t) => {
-      const { count } = await supabase.from(t.table).select("*", { count: "exact", head: true });
-      return count ?? 0;
-    })
-  );
+  const [counts, { data: contacts }, { data: enquiries }] = await Promise.all([
+    Promise.all(
+      TABLES.map(async (t) => {
+        const { count } = await supabase.from(t.table).select("*", { count: "exact", head: true });
+        return count ?? 0;
+      })
+    ),
+    supabase.from("contact_messages").select("id, name, created_at").order("created_at", { ascending: false }).limit(50),
+    supabase.from("admission_enquiries").select("id, student_name, created_at").order("created_at", { ascending: false }).limit(50),
+  ]);
+
+  const activity = [
+    ...(contacts ?? []).map((c) => ({ id: c.id, label: `${c.name} sent a contact message`, at: c.created_at })),
+    ...(enquiries ?? []).map((e) => ({ id: e.id, label: `${e.student_name} submitted an admission enquiry`, at: e.created_at })),
+  ]
+    .sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime())
+    .slice(0, 6);
+
+  const days = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6 - i));
+    return d;
+  });
+  const dayCounts = days.map((d) => {
+    const key = d.toISOString().slice(0, 10);
+    const count =
+      (contacts ?? []).filter((c) => c.created_at.slice(0, 10) === key).length +
+      (enquiries ?? []).filter((e) => e.created_at.slice(0, 10) === key).length;
+    return { label: d.toLocaleDateString("en-IN", { weekday: "short" }), count };
+  });
+  const maxCount = Math.max(1, ...dayCounts.map((d) => d.count));
 
   return (
     <div>
@@ -55,7 +90,41 @@ export default async function AdminDashboardPage() {
         ))}
       </div>
 
-      <div className="mt-10 rounded-2xl border border-gold-400/30 bg-gold-50 p-6">
+      <div className="mt-8 grid gap-6 lg:grid-cols-2">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="font-bold text-navy-950">Form Submissions — Last 7 Days</h2>
+          <div className="mt-6 flex h-32 items-end gap-3">
+            {dayCounts.map((d) => (
+              <div key={d.label} className="flex flex-1 flex-col items-center gap-2">
+                <div
+                  className="w-full rounded-t-md bg-gradient-to-t from-navy-900 to-navy-600"
+                  style={{ height: `${(d.count / maxCount) * 100}%`, minHeight: d.count > 0 ? "6px" : "2px" }}
+                  title={`${d.count} submissions`}
+                />
+                <span className="text-[10px] font-medium text-slate-400">{d.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="font-bold text-navy-950">Recent Activity</h2>
+          {activity.length === 0 ? (
+            <p className="mt-4 text-sm text-slate-400">No form submissions yet.</p>
+          ) : (
+            <ul className="mt-4 space-y-3">
+              {activity.map((a) => (
+                <li key={a.id} className="flex items-center justify-between gap-4 text-sm">
+                  <span className="truncate text-slate-700">{a.label}</span>
+                  <span className="shrink-0 text-xs text-slate-400">{timeAgo(a.at)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-8 rounded-2xl border border-gold-400/30 bg-gold-50 p-6">
         <h2 className="font-bold text-navy-950">Quick Start</h2>
         <p className="mt-1 text-sm text-slate-600">
           Start with <strong>Site Settings</strong> to set the school name, logo, contact details

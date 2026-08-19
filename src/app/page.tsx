@@ -6,7 +6,11 @@ import { NotificationTicker } from "@/components/site/notification-ticker";
 import { StatCounters } from "@/components/site/stat-counters";
 import { Leaderboard } from "@/components/site/leaderboard";
 import { GalleryTeaser } from "@/components/site/gallery-teaser";
+import { EventsStrip } from "@/components/site/events-strip";
+import { TestimonialsCarousel } from "@/components/site/testimonials-carousel";
+import { Reveal } from "@/components/site/reveal";
 import {
+  getEvents,
   getGalleryImages,
   getHeroSlides,
   getNotifications,
@@ -14,18 +18,22 @@ import {
   getStaffMembers,
   getStatCounters,
   getStudentToppers,
+  getTestimonials,
 } from "@/lib/queries";
 
 export default async function HomePage() {
-  const [settings, slides, notifications, counters, staff, students, gallery] = await Promise.all([
-    getSiteSettings(),
-    getHeroSlides(),
-    getNotifications(6),
-    getStatCounters(),
-    getStaffMembers(),
-    getStudentToppers(),
-    getGalleryImages(),
-  ]);
+  const [settings, slides, notifications, counters, staff, students, gallery, events, testimonials] =
+    await Promise.all([
+      getSiteSettings(),
+      getHeroSlides(),
+      getNotifications(6),
+      getStatCounters(),
+      getStaffMembers(),
+      getStudentToppers(),
+      getGalleryImages(),
+      getEvents(),
+      getTestimonials(),
+    ]);
 
   return (
     <>
@@ -39,7 +47,7 @@ export default async function HomePage() {
       {/* Welcome / Chairman message */}
       <section className="relative mx-auto max-w-7xl px-6 py-20">
         <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div className="relative">
+          <Reveal className="relative">
             <div className="absolute -inset-4 -z-10 rounded-3xl bg-gradient-to-tr from-gold-400/20 to-navy-600/10 blur-2xl" />
             <div className="absolute -inset-x-6 -bottom-6 -z-10 h-full rounded-3xl bg-dot-grid opacity-60" />
             <div className="overflow-hidden rounded-3xl shadow-2xl ring-1 ring-black/5">
@@ -60,8 +68,8 @@ export default async function HomePage() {
                 <p className="text-xs text-slate-500">Since inception</p>
               </div>
             </div>
-          </div>
-          <div>
+          </Reveal>
+          <Reveal delay={150}>
             <span className="text-xs font-bold uppercase tracking-widest text-gold-600">
               A Message From Leadership
             </span>
@@ -77,7 +85,7 @@ export default async function HomePage() {
             >
               Learn About Us <ArrowRight className="h-4 w-4" />
             </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -85,14 +93,14 @@ export default async function HomePage() {
 
       {/* Why SRM Welkin */}
       <section className="mx-auto max-w-7xl px-6 py-20">
-        <div className="mx-auto max-w-2xl text-center">
+        <Reveal className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-bold uppercase tracking-widest text-gold-600">
             Why Choose Us
           </span>
           <h2 className="mt-3 text-3xl font-extrabold text-navy-950 sm:text-4xl">
             A Foundation for Lifelong Success
           </h2>
-        </div>
+        </Reveal>
         <div className="mt-14 grid gap-6 sm:grid-cols-3">
           {[
             {
@@ -110,21 +118,22 @@ export default async function HomePage() {
               title: "Proven Results",
               body: "A consistent track record of outstanding results in academics and co-curricular activities.",
             },
-          ].map(({ icon: Icon, title, body }) => (
-            <div
-              key={title}
-              className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 shadow-sm transition-all hover:-translate-y-1.5 hover:shadow-xl"
-            >
-              <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gold-400/0 transition-colors duration-300 group-hover:bg-gold-400/10" />
-              <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-navy-900 text-gold-400 transition-colors group-hover:bg-gold-500 group-hover:text-navy-950">
-                <Icon className="h-6 w-6" />
+          ].map(({ icon: Icon, title, body }, i) => (
+            <Reveal key={title} delay={i * 100}>
+              <div className="group relative h-full overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 shadow-sm transition-all hover:-translate-y-1.5 hover:shadow-xl">
+                <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gold-400/0 transition-colors duration-300 group-hover:bg-gold-400/10" />
+                <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-navy-900 text-gold-400 transition-colors group-hover:bg-gold-500 group-hover:text-navy-950">
+                  <Icon className="h-6 w-6" />
+                </div>
+                <h3 className="relative mt-5 text-lg font-bold text-navy-950">{title}</h3>
+                <p className="relative mt-2 text-sm leading-relaxed text-slate-600">{body}</p>
               </div>
-              <h3 className="relative mt-5 text-lg font-bold text-navy-950">{title}</h3>
-              <p className="relative mt-2 text-sm leading-relaxed text-slate-600">{body}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
+
+      <EventsStrip events={events} />
 
       <Leaderboard
         eyebrow="Meet Our Educators"
@@ -153,6 +162,8 @@ export default async function HomePage() {
       />
 
       <GalleryTeaser images={gallery} />
+
+      <TestimonialsCarousel testimonials={testimonials} />
 
       {/* CTA */}
       <section className="relative overflow-hidden bg-navy-950 py-20">

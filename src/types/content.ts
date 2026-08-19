@@ -82,6 +82,35 @@ export interface StudentTopper {
   is_published: boolean;
 }
 
+export interface SchoolEvent {
+  id: string;
+  title: string;
+  description: string;
+  event_date: string;
+  event_time: string;
+  location: string;
+  is_published: boolean;
+}
+
+export interface Testimonial {
+  id: string;
+  name: string;
+  role: string;
+  quote: string;
+  photo_url: string;
+  sort_order: number;
+  is_published: boolean;
+}
+
+export interface Milestone {
+  id: string;
+  year: string;
+  title: string;
+  description: string;
+  sort_order: number;
+  is_published: boolean;
+}
+
 export interface AlumniEntry {
   id: string;
   name: string;

@@ -6,11 +6,14 @@ import type {
   GalleryImage,
   HeroSlide,
   Notification,
+  Milestone,
   ResultDoc,
+  SchoolEvent,
   SiteSettings,
   StaffMember,
   StatCounter,
   StudentTopper,
+  Testimonial,
 } from "@/types/content";
 
 export const DEFAULT_SETTINGS: SiteSettings = {
@@ -170,6 +173,60 @@ export async function getDisclosures(): Promise<Disclosure[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("disclosures")
+    .select("*")
+    .eq("is_published", true)
+    .order("sort_order", { ascending: true });
+  return data ?? [];
+}
+
+export const DEFAULT_EVENTS: SchoolEvent[] = [
+  { id: "default-e1", title: "Annual Sports Day", description: "A full day of athletics, team games and prize distribution for all classes.", event_date: new Date(Date.now() + 20 * 86400000).toISOString().slice(0, 10), event_time: "9:00 AM", location: "Main Playground", is_published: true },
+  { id: "default-e2", title: "Parent-Teacher Meeting", description: "Term progress discussion for Classes I–XII.", event_date: new Date(Date.now() + 10 * 86400000).toISOString().slice(0, 10), event_time: "10:00 AM – 1:00 PM", location: "Respective Classrooms", is_published: true },
+  { id: "default-e3", title: "Annual Day Celebration", description: "Cultural performances, awards and the annual school showcase.", event_date: new Date(Date.now() + 45 * 86400000).toISOString().slice(0, 10), event_time: "4:00 PM", location: "Multipurpose Hall", is_published: true },
+];
+
+export async function getEvents(): Promise<SchoolEvent[]> {
+  if (!SUPABASE_CONFIGURED) return DEFAULT_EVENTS;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("events")
+    .select("*")
+    .eq("is_published", true)
+    .gte("event_date", new Date().toISOString().slice(0, 10))
+    .order("event_date", { ascending: true });
+  return data ?? [];
+}
+
+export const DEFAULT_TESTIMONIALS: Testimonial[] = [
+  { id: "default-te1", name: "Bilal Ahmad", role: "Parent, Class VIII", quote: "The individual attention my daughter gets here is remarkable. The teachers genuinely care about every child's progress.", photo_url: "", sort_order: 1, is_published: true },
+  { id: "default-te2", name: "Rukhsana Jan", role: "Parent, Class V", quote: "A perfect balance of academics and values. My son looks forward to school every single day.", photo_url: "", sort_order: 2, is_published: true },
+  { id: "default-te3", name: "Owais Mattoo", role: "Alumnus, Batch of 2019", quote: "SRM Welkin gave me the foundation and confidence to pursue engineering. Forever grateful to my teachers here.", photo_url: "", sort_order: 3, is_published: true },
+];
+
+export async function getTestimonials(): Promise<Testimonial[]> {
+  if (!SUPABASE_CONFIGURED) return DEFAULT_TESTIMONIALS;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("testimonials")
+    .select("*")
+    .eq("is_published", true)
+    .order("sort_order", { ascending: true });
+  return data ?? [];
+}
+
+export const DEFAULT_MILESTONES: Milestone[] = [
+  { id: "default-m1", year: "2005", title: "Foundation Laid", description: "SRM Welkin was established to bring quality education to Sopore.", sort_order: 1, is_published: true },
+  { id: "default-m2", year: "2010", title: "Campus Expansion", description: "Growth to seven spacious blocks across 58 kanals of land.", sort_order: 2, is_published: true },
+  { id: "default-m3", year: "2015", title: "CBSE Accreditation", description: "Recognised by CBSE for academic excellence and infrastructure.", sort_order: 3, is_published: true },
+  { id: "default-m4", year: "2020", title: "Digital Library Launched", description: "A fully digitalised library opened for students and staff.", sort_order: 4, is_published: true },
+  { id: "default-m5", year: "2025", title: "5,900+ Students", description: "Grew to serve nearly six thousand students across the region.", sort_order: 5, is_published: true },
+];
+
+export async function getMilestones(): Promise<Milestone[]> {
+  if (!SUPABASE_CONFIGURED) return DEFAULT_MILESTONES;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("milestones")
     .select("*")
     .eq("is_published", true)
     .order("sort_order", { ascending: true });

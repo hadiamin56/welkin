@@ -19,6 +19,9 @@ const ALLOWED_TABLES = [
   "alumni",
   "contact_messages",
   "admission_enquiries",
+  "events",
+  "testimonials",
+  "milestones",
 ] as const;
 
 export type AdminTable = (typeof ALLOWED_TABLES)[number];
@@ -61,6 +64,22 @@ export async function deleteRow(table: string, id: string, path: string) {
   const supabase = await createClient();
   const { error } = await supabase.from(table).delete().eq("id", id);
   if (error) throw new Error(error.message);
+  revalidatePath(path);
+  revalidatePath("/");
+}
+
+export async function reorderRows(
+  table: string,
+  orderedIds: string[],
+  path: string
+) {
+  assertTable(table);
+  const supabase = await createClient();
+  await Promise.all(
+    orderedIds.map((id, index) =>
+      supabase.from(table).update({ sort_order: index + 1 }).eq("id", id)
+    )
+  );
   revalidatePath(path);
   revalidatePath("/");
 }

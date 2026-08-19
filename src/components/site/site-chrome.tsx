@@ -1,8 +1,12 @@
 "use client";
 
+import { Suspense } from "react";
 import { usePathname } from "next/navigation";
 import { SiteHeader } from "@/components/site/site-header";
 import { SiteFooter } from "@/components/site/site-footer";
+import { RouteProgress } from "@/components/site/route-progress";
+import { ServiceWorkerRegister } from "@/components/site/sw-register";
+import { LanguageProvider } from "@/components/site/language-provider";
 import type { SiteSettings } from "@/types/content";
 
 export function SiteChrome({
@@ -18,14 +22,20 @@ export function SiteChrome({
   if (isAdmin) return <>{children}</>;
 
   return (
-    <>
+    <LanguageProvider>
+      <ServiceWorkerRegister />
+      <Suspense fallback={null}>
+        <RouteProgress />
+      </Suspense>
       <SiteHeader
         schoolName={settings.school_name}
         logoUrl={settings.logo_url}
         phone={settings.phone}
         email={settings.email}
       />
-      <main className="flex-1">{children}</main>
+      <main key={pathname} className="flex-1 animate-fade-up">
+        {children}
+      </main>
       <SiteFooter
         schoolName={settings.school_name}
         logoUrl={settings.logo_url}
@@ -36,6 +46,6 @@ export function SiteChrome({
         linkedinUrl={settings.linkedin_url}
         twitterUrl={settings.twitter_url}
       />
-    </>
+    </LanguageProvider>
   );
 }

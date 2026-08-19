@@ -37,6 +37,10 @@ In the Supabase SQL editor, run, in order:
    original site so the clone isn't empty on first load.
 3. `supabase/migrations/0003_students.sql` — creates the Student Leaderboard
    table and seeds a few sample top achievers.
+4. `supabase/migrations/0004_events_testimonials_milestones.sql` — creates
+   the Events Calendar, Testimonials and "Our Journey" milestones tables,
+   seeds sample content, and enables Supabase Realtime on `notifications`
+   (used for the live notification toasts).
 
 ### 3. Create an admin user
 
@@ -71,12 +75,37 @@ built-in defaults, and `/admin` shows setup instructions instead of erroring.
 
 - **Site Settings** — school name, logo, contact info, social links, hero
   copy, chairman's message, About page copy, Admissions copy.
-- **Hero Slides**, **Notifications**, **Stat Counters**, **Teacher
-  Leaderboard**, **Student Leaderboard**, **Achievements**, **Gallery**,
-  **Results**, **Disclosures**, **Alumni** — full CRUD with image upload
-  (stored in Supabase Storage) or a pasted URL.
+- **Hero Slides**, **Notifications**, **Events Calendar**, **Stat
+  Counters**, **Teacher Leaderboard**, **Student Leaderboard**,
+  **Achievements**, **Gallery**, **Testimonials**, **Our Journey**
+  (milestones), **Results**, **Disclosures**, **Alumni** — full CRUD with
+  image upload (stored in Supabase Storage) or a pasted URL. Lists with a
+  `sort_order` field can be reordered by dragging.
 - **Messages** — contact form and admission enquiry submissions from the
-  public site.
+  public site, plus a 7-day submissions chart and recent-activity feed on
+  the dashboard home.
+
+## Modern features
+
+- **Events calendar** — homepage strip + full `/events` page, admin-managed.
+- **Testimonials carousel** — auto-rotating parent/alumni quotes on the homepage.
+- **"Our Journey" timeline** — animated milestones on the About page.
+- **Scroll-reveal & route transitions** — sections fade in on scroll; page
+  content crossfades on navigation; a top progress bar shows during route
+  changes.
+- **Language toggle (EN/UR)** — switches UI chrome (nav, buttons, footer
+  headings) and page direction (LTR/RTL) instantly, persisted per browser.
+  Admin-entered content (notifications, achievements, etc.) is shown as
+  typed by the admin and is not machine-translated.
+- **Live notifications** — new notices published from the admin panel appear
+  as an instant toast + unread badge on the bell icon via Supabase Realtime.
+- **Command palette (⌘K / Ctrl+K)** — fuzzy search across pages,
+  notifications, results and achievements.
+- **Structured data** — JSON-LD `EducationalOrganization` markup for richer
+  search results.
+- **PWA support** — installable with a manifest and offline caching for the
+  homepage and notice board via a service worker (`public/sw.js`, only
+  active in production builds).
 
 ## Project structure
 
