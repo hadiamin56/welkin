@@ -9,9 +9,10 @@ import { ImageUploadField } from "@/components/admin/image-upload-field";
 export type FieldConfig = {
   name: string;
   label: string;
-  type: "text" | "textarea" | "number" | "boolean" | "image";
+  type: "text" | "textarea" | "number" | "boolean" | "image" | "select";
   required?: boolean;
   imageFolder?: string;
+  options?: { value: string; label: string }[];
 };
 
 type Row = Record<string, FieldValue>;
@@ -252,6 +253,22 @@ function RecordForm({
               defaultValue={String(initial?.[f.name] ?? "")}
               folder={f.imageFolder ?? table}
             />
+          ) : f.type === "select" ? (
+            <select
+              name={f.name}
+              defaultValue={String(initial?.[f.name] ?? "")}
+              required={f.required}
+              className="input"
+            >
+              <option value="" disabled>
+                Select an option
+              </option>
+              {f.options?.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
           ) : (
             <input
               type={f.type === "number" ? "number" : "text"}

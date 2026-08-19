@@ -22,11 +22,15 @@ import {
   CalendarDays,
   Quote,
   Milestone as MilestoneIcon,
+  Menu,
+  ListTree,
 } from "lucide-react";
 
 const LINKS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/settings", label: "Site Settings", icon: Settings },
+  { href: "/admin/nav-categories", label: "Navigation — Categories", icon: Menu },
+  { href: "/admin/nav-items", label: "Navigation — Items", icon: ListTree },
   { href: "/admin/hero-slides", label: "Hero Slides", icon: GalleryHorizontal },
   { href: "/admin/notifications", label: "Notifications", icon: Bell },
   { href: "/admin/events", label: "Events Calendar", icon: CalendarDays },

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteChrome } from "@/components/site/site-chrome";
-import { getSiteSettings } from "@/lib/queries";
+import { getNavCategories, getSiteSettings } from "@/lib/queries";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const settings = await getSiteSettings();
+  const [settings, navCategories] = await Promise.all([getSiteSettings(), getNavCategories()]);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -61,7 +61,9 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <SiteChrome settings={settings}>{children}</SiteChrome>
+        <SiteChrome settings={settings} navCategories={navCategories}>
+          {children}
+        </SiteChrome>
       </body>
     </html>
   );

@@ -41,6 +41,9 @@ In the Supabase SQL editor, run, in order:
    the Events Calendar, Testimonials and "Our Journey" milestones tables,
    seeds sample content, and enables Supabase Realtime on `notifications`
    (used for the live notification toasts).
+5. `supabase/migrations/0005_nav_menu.sql` — creates the configurable
+   navigation menu tables (`nav_categories`, `nav_items`) and seeds a
+   default menu structure grouping the existing pages.
 
 ### 3. Create an admin user
 
@@ -75,6 +78,10 @@ built-in defaults, and `/admin` shows setup instructions instead of erroring.
 
 - **Site Settings** — school name, logo, contact info, social links, hero
   copy, chairman's message, About page copy, Admissions copy.
+- **Navigation — Categories / Items** — the header menu itself. A category
+  with no sub-items renders as a plain link; a category with sub-items
+  renders as a dropdown. Add, remove, rename or re-nest any menu entry from
+  here — nothing about the nav bar is hardcoded.
 - **Hero Slides**, **Notifications**, **Events Calendar**, **Stat
   Counters**, **Teacher Leaderboard**, **Student Leaderboard**,
   **Achievements**, **Gallery**, **Testimonials**, **Our Journey**
@@ -93,10 +100,9 @@ built-in defaults, and `/admin` shows setup instructions instead of erroring.
 - **Scroll-reveal & route transitions** — sections fade in on scroll; page
   content crossfades on navigation; a top progress bar shows during route
   changes.
-- **Language toggle (EN/UR)** — switches UI chrome (nav, buttons, footer
-  headings) and page direction (LTR/RTL) instantly, persisted per browser.
-  Admin-entered content (notifications, achievements, etc.) is shown as
-  typed by the admin and is not machine-translated.
+- **Configurable navigation** — the header menu is fully admin-managed
+  (see Admin dashboard above): categories, dropdowns and links are all
+  editable, reorderable and extensible without touching code.
 - **Live notifications** — new notices published from the admin panel appear
   as an instant toast + unread badge on the bell icon via Supabase Realtime.
 - **Command palette (⌘K / Ctrl+K)** — fuzzy search across pages,

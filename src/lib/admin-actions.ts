@@ -22,6 +22,8 @@ const ALLOWED_TABLES = [
   "events",
   "testimonials",
   "milestones",
+  "nav_categories",
+  "nav_items",
 ] as const;
 
 export type AdminTable = (typeof ALLOWED_TABLES)[number];

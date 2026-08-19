@@ -82,6 +82,24 @@ export interface StudentTopper {
   is_published: boolean;
 }
 
+export interface NavItem {
+  id: string;
+  category_id: string;
+  label: string;
+  href: string;
+  sort_order: number;
+  is_published: boolean;
+}
+
+export interface NavCategory {
+  id: string;
+  label: string;
+  href: string;
+  sort_order: number;
+  is_published: boolean;
+  items: NavItem[];
+}
+
 export interface SchoolEvent {
   id: string;
   title: string;

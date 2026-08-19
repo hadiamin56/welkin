@@ -7,6 +7,7 @@ import type {
   HeroSlide,
   Notification,
   Milestone,
+  NavCategory,
   ResultDoc,
   SchoolEvent,
   SiteSettings,
@@ -231,6 +232,62 @@ export async function getMilestones(): Promise<Milestone[]> {
     .eq("is_published", true)
     .order("sort_order", { ascending: true });
   return data ?? [];
+}
+
+export const DEFAULT_NAV_CATEGORIES: NavCategory[] = [
+  { id: "default-nav-1", label: "Home", href: "/", sort_order: 1, is_published: true, items: [] },
+  {
+    id: "default-nav-2",
+    label: "About",
+    href: "",
+    sort_order: 2,
+    is_published: true,
+    items: [
+      { id: "default-nav-2-1", category_id: "default-nav-2", label: "About Us", href: "/about", sort_order: 1, is_published: true },
+      { id: "default-nav-2-2", category_id: "default-nav-2", label: "Academics", href: "/academics", sort_order: 2, is_published: true },
+    ],
+  },
+  { id: "default-nav-3", label: "Admissions", href: "/admissions", sort_order: 3, is_published: true, items: [] },
+  {
+    id: "default-nav-4",
+    label: "Community",
+    href: "",
+    sort_order: 4,
+    is_published: true,
+    items: [
+      { id: "default-nav-4-1", category_id: "default-nav-4", label: "Achievements", href: "/achievements", sort_order: 1, is_published: true },
+      { id: "default-nav-4-2", category_id: "default-nav-4", label: "Gallery", href: "/gallery", sort_order: 2, is_published: true },
+      { id: "default-nav-4-3", category_id: "default-nav-4", label: "Events", href: "/events", sort_order: 3, is_published: true },
+      { id: "default-nav-4-4", category_id: "default-nav-4", label: "Alumni", href: "/alumni", sort_order: 4, is_published: true },
+    ],
+  },
+  {
+    id: "default-nav-5",
+    label: "Resources",
+    href: "",
+    sort_order: 5,
+    is_published: true,
+    items: [
+      { id: "default-nav-5-1", category_id: "default-nav-5", label: "Notifications", href: "/notifications", sort_order: 1, is_published: true },
+      { id: "default-nav-5-2", category_id: "default-nav-5", label: "Results", href: "/results", sort_order: 2, is_published: true },
+      { id: "default-nav-5-3", category_id: "default-nav-5", label: "Mandatory Disclosures", href: "/mandatory-disclosures", sort_order: 3, is_published: true },
+    ],
+  },
+  { id: "default-nav-6", label: "Contact", href: "/contact", sort_order: 6, is_published: true, items: [] },
+];
+
+export async function getNavCategories(): Promise<NavCategory[]> {
+  if (!SUPABASE_CONFIGURED) return DEFAULT_NAV_CATEGORIES;
+  const supabase = await createClient();
+  const [{ data: categories }, { data: items }] = await Promise.all([
+    supabase.from("nav_categories").select("*").eq("is_published", true).order("sort_order", { ascending: true }),
+    supabase.from("nav_items").select("*").eq("is_published", true).order("sort_order", { ascending: true }),
+  ]);
+  if (!categories) return DEFAULT_NAV_CATEGORIES;
+  return categories.map((c) => ({
+    ...c,
+    items: (items ?? []).filter((i) => i.category_id === c.id),
+  }));
 }
 
 export async function getAlumni(): Promise<AlumniEntry[]> {

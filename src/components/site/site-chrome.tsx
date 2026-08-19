@@ -6,14 +6,16 @@ import { SiteHeader } from "@/components/site/site-header";
 import { SiteFooter } from "@/components/site/site-footer";
 import { RouteProgress } from "@/components/site/route-progress";
 import { ServiceWorkerRegister } from "@/components/site/sw-register";
-import { LanguageProvider } from "@/components/site/language-provider";
 import type { SiteSettings } from "@/types/content";
+import type { NavCategory } from "@/types/content";
 
 export function SiteChrome({
   settings,
+  navCategories,
   children,
 }: {
   settings: SiteSettings;
+  navCategories: NavCategory[];
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -22,7 +24,7 @@ export function SiteChrome({
   if (isAdmin) return <>{children}</>;
 
   return (
-    <LanguageProvider>
+    <>
       <ServiceWorkerRegister />
       <Suspense fallback={null}>
         <RouteProgress />
@@ -32,6 +34,7 @@ export function SiteChrome({
         logoUrl={settings.logo_url}
         phone={settings.phone}
         email={settings.email}
+        navCategories={navCategories}
       />
       <main key={pathname} className="flex-1 animate-fade-up">
         {children}
@@ -46,6 +49,6 @@ export function SiteChrome({
         linkedinUrl={settings.linkedin_url}
         twitterUrl={settings.twitter_url}
       />
-    </LanguageProvider>
+    </>
   );
 }
