@@ -44,12 +44,13 @@ single admin role.
 
 ### 4. Configure environment variables
 
-Copy your Project URL and anon/public key from Supabase → Settings → API
-into `.env.local`:
+Copy your Project URL and publishable key from Supabase → Settings → API
+into `.env.local` (Supabase's newer `sb_publishable_...` key works the same
+way the legacy anon key used to — just under a new name):
 
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
 ```
 
 ### 5. Run the app
